@@ -109,6 +109,10 @@ require('lazy').setup({
     },
   },
 
+  {
+    'theprimeagen/harpoon'
+  },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -292,7 +296,6 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -302,8 +305,8 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>fg', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -366,7 +369,8 @@ require('nvim-treesitter.configs').setup {
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+        -- Conflicts with Harpoon bind.
+        -- ['<leader>a'] = '@parameter.inner',
       },
       swap_previous = {
         ['<leader>A'] = '@parameter.inner',
@@ -522,6 +526,69 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+-- Allows us to do Shift-J / Shift-K in visual line select mode to move lines around
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv");
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv");
+
+-- Make searching and paging up and down keep the screen centered
+vim.keymap.set("n", "<C-d>", "<C-d>zz");
+vim.keymap.set("n", "<C-u>", "<C-u>zz");
+vim.keymap.set("n", "n", "nzzzv");
+vim.keymap.set("n", "N", "Nzzzv");
+
+-- Search-replace
+vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]);
+
+vim.keymap.set("n", "<leader>p", "\"+p");
+vim.keymap.set("n", "<leader>y", "\"+y");
+
+-- Easy bind to make files executable
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true });
+
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git);
+
+-- File tree
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex);
+vim.keymap.set("n", "<leader>t", ':terminal<CR>');
+vim.opt.number = true;
+vim.opt.relativenumber = true;
+
+local mark = require("harpoon.mark");
+local ui = require("harpoon.ui");
+vim.keymap.set("n", "<leader>a", mark.add_file);
+vim.keymap.set("n", "<leader>h", ui.toggle_quick_menu);
+vim.keymap.set("n", "<A-h>", ui.toggle_quick_menu);
+
+-- Alt + [num] to jump to a file
+vim.keymap.set("n", "<A-1>", function() ui.nav_file(1) end);
+vim.keymap.set("n", "<A-2>", function() ui.nav_file(2) end);
+vim.keymap.set("n", "<A-3>", function() ui.nav_file(3) end);
+vim.keymap.set("n", "<A-4>", function() ui.nav_file(4) end);
+vim.keymap.set("n", "<A-5>", function() ui.nav_file(5) end);
+vim.keymap.set("n", "<A-6>", function() ui.nav_file(6) end);
+vim.keymap.set("n", "<A-7>", function() ui.nav_file(7) end);
+vim.keymap.set("n", "<A-8>", function() ui.nav_file(8) end);
+vim.keymap.set("n", "<A-9>", function() ui.nav_file(9) end);
+vim.keymap.set("n", "<A-0>", function() ui.nav_file(10) end);
+
+-- 2 space tabs
+vim.opt.tabstop = 2;
+vim.opt.softtabstop = 2;
+vim.opt.shiftwidth = 2;
+vim.opt.expandtab = true;
+vim.opt.smartindent = true;
+
+-- Disable swapfile and make undos persist in a file
+vim.opt.swapfile = false;
+vim.opt.backup = false;
+vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir";
+vim.opt.undofile = true;
+
+vim.opt.incsearch = true;
+vim.opt.updatetime = 50;
+
+vim.opt.colorcolumn = "80";
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
