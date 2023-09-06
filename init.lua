@@ -113,6 +113,10 @@ require('lazy').setup({
     'theprimeagen/harpoon'
   },
 
+  {
+    'Civitasv/cmake-tools.nvim'
+  },
+
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
   {
@@ -589,6 +593,11 @@ vim.opt.incsearch = true;
 vim.opt.updatetime = 50;
 
 vim.opt.colorcolumn = "80";
+
+-- CMake keybinds
+vim.keymap.set("n", "<F3>", ":CMakeGenerate<CR>");
+vim.keymap.set("n", "<F7>", ":CMakeBuild<CR>");
+vim.keymap.set("n", "<F5>", ":CMakeRun<CR>");
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
