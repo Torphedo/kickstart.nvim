@@ -632,5 +632,15 @@ vim.keymap.set("n", "<F3>", ":CMakeGenerate<CR>");
 vim.keymap.set("n", "<F7>", ":CMakeBuild<CR>");
 vim.keymap.set("n", "<F5>", ":CMakeRun<CR>");
 
+local nvim_tmux_nav = require('nvim-tmux-navigation')
+
+nvim_tmux_nav.setup {
+    disable_when_zoomed = true -- defaults to false
+}
+vim.keymap.set('n', "<A-h>", "<Cmd>NvimTmuxNavigateLeft<CR>")
+vim.keymap.set('n', "<A-j>", "<Cmd>NvimTmuxNavigateDown<CR>")
+vim.keymap.set('n', "<A-k>", "<Cmd>NvimTmuxNavigateUp<CR>")
+vim.keymap.set('n', "<A-l>", "<Cmd>NvimTmuxNavigateRight<CR>")
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
